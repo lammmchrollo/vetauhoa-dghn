@@ -1,0 +1,81 @@
+{
+  "info": {
+    "_postman_id": "a2e74028-16db-4a24-9012-railgo2026",
+    "name": "RailGo API",
+    "description": "Kiểm thử API chức năng, âm tính và data flow cho RailGo.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]},
+  "item": [
+    {
+      "name": "01 - Health & Public",
+      "item": [
+        {
+          "name": "Health check",
+          "request": {"auth": {"type": "noauth"}, "method": "GET", "url": "{{baseUrl}}/health"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.test('Service is UP', () => pm.expect(pm.response.json().data.status).to.eql('UP'));"], "type": "text/javascript"}}]
+        },
+        {
+          "name": "Get stations",
+          "request": {"auth": {"type": "noauth"}, "method": "GET", "url": "{{baseUrl}}/stations"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.test('At least 3 stations', () => pm.expect(pm.response.json().data.length).to.be.at.least(3));"], "type": "text/javascript"}}]
+        },
+        {
+          "name": "Search trips - positive",
+          "request": {"auth": {"type": "noauth"}, "method": "GET", "url": {"raw": "{{baseUrl}}/trips/search?from=ST-HN&to=ST-DN&date=2026-10-24&passengers=1", "host": ["{{baseUrl}}"], "path": ["trips", "search"], "query": [{"key": "from", "value": "ST-HN"}, {"key": "to", "value": "ST-DN"}, {"key": "date", "value": "2026-10-24"}, {"key": "passengers", "value": "1"}]}},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.test('Returns matching trips', () => { const d=pm.response.json().data; pm.expect(d.length).to.be.above(0); pm.expect(d[0].from).to.eql('ST-HN'); pm.expect(d[0].to).to.eql('ST-DN'); });", "if (pm.response.json().data.length) pm.environment.set('tripId', pm.response.json().data[0].id);"], "type": "text/javascript"}}]
+        },
+        {
+          "name": "Search trips - invalid passenger count",
+          "request": {"auth": {"type": "noauth"}, "method": "GET", "url": {"raw": "{{baseUrl}}/trips/search?from=ST-HN&to=ST-DN&date=2026-10-24&passengers=0", "host": ["{{baseUrl}}"], "path": ["trips", "search"], "query": [{"key": "from", "value": "ST-HN"}, {"key": "to", "value": "ST-DN"}, {"key": "date", "value": "2026-10-24"}, {"key": "passengers", "value": "0"}]}},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('Status 400', () => pm.response.to.have.status(400));", "pm.test('Correct error code', () => pm.expect(pm.response.json().error).to.eql('INVALID_PASSENGERS'));"], "type": "text/javascript"}}]
+        }
+      ]
+    },
+    {
+      "name": "02 - Authentication",
+      "item": [
+        {
+          "name": "Login customer",
+          "request": {"auth": {"type": "noauth"}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"email\": \"{{customerEmail}}\",\n  \"password\": \"{{customerPassword}}\"\n}"}, "url": "{{baseUrl}}/auth/login"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "const body=pm.response.json();", "pm.test('Token returned', () => pm.expect(body.data.token).to.be.a('string').and.not.empty);", "pm.environment.set('token', body.data.token);"], "type": "text/javascript"}}]
+        },
+        {
+          "name": "Login wrong password",
+          "request": {"auth": {"type": "noauth"}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"email\":\"{{customerEmail}}\",\"password\":\"wrong-password\"}"}, "url": "{{baseUrl}}/auth/login"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('Status 401', () => pm.response.to.have.status(401));", "pm.test('No token leaked', () => pm.expect(pm.response.text()).not.to.include('token'));"], "type": "text/javascript"}}]
+        },
+        {
+          "name": "Get current user",
+          "request": {"method": "GET", "url": "{{baseUrl}}/auth/me"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.test('Customer role', () => pm.expect(pm.response.json().data.role).to.eql('CUSTOMER'));"], "type": "text/javascript"}}]
+        }
+      ]
+    },
+    {
+      "name": "03 - Trips & Bookings",
+      "item": [
+        {
+          "name": "Get trip details",
+          "request": {"auth": {"type": "noauth"}, "method": "GET", "url": "{{baseUrl}}/trips/{{tripId}}"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.test('Trip has train and stations', () => { const d=pm.response.json().data; pm.expect(d.train).to.be.an('object'); pm.expect(d.fromStation).to.be.an('object'); });"], "type": "text/javascript"}}]
+        },
+        {
+          "name": "Get seat map",
+          "request": {"auth": {"type": "noauth"}, "method": "GET", "url": "{{baseUrl}}/trips/{{tripId}}/seats"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.test('Seat model is valid', () => { const s=pm.response.json().data[0]; pm.expect(s).to.have.all.keys('code','type','available'); });"], "type": "text/javascript"}}]
+        },
+        {
+          "name": "My bookings",
+          "request": {"method": "GET", "url": "{{baseUrl}}/bookings/me"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('Status 200', () => pm.response.to.have.status(200));", "pm.test('Response is array', () => pm.expect(pm.response.json().data).to.be.an('array'));"], "type": "text/javascript"}}]
+        },
+        {
+          "name": "Protected endpoint without token",
+          "request": {"auth": {"type": "noauth"}, "method": "GET", "url": "{{baseUrl}}/bookings/me"},
+          "event": [{"listen": "test", "script": {"exec": ["pm.test('Status 401', () => pm.response.to.have.status(401));", "pm.test('Unauthorized code', () => pm.expect(pm.response.json().error).to.eql('UNAUTHORIZED'));"], "type": "text/javascript"}}]
+        }
+      ]
+    }
+  ]
+}

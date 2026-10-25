@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="RailGo – Đặt vé tàu hỏa trực tuyến nhanh chóng, minh bạch và tiện lợi.">
+  <title>RailGo | Mỗi hành trình, một trải nghiệm đẹp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <div class="announcement">Ưu đãi mùa thu: giảm đến 20% cho hành trình đặt sớm <span>•</span> Tổng đài 1900 6868</div>
+  <header class="site-header" id="siteHeader">
+    <a href="#home" class="brand" aria-label="RailGo - Trang chủ">
+      <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span>Rail<span>Go</span></span>
+    </a>
+    <nav class="main-nav" aria-label="Điều hướng chính">
+      <a href="#home" data-nav="home" class="active">Trang chủ</a>
+      <a href="#search" data-nav="search">Tìm chuyến</a>
+      <a href="#lookup" data-nav="lookup">Tra cứu vé</a>
+      <a href="#account" data-nav="account">Vé của tôi</a>
+      <a href="#admin" data-nav="admin" class="admin-link hidden">Quản lý</a>
+    </nav>
+    <div class="header-actions">
+      <button class="btn btn-ghost" id="loginButton">Đăng nhập</button>
+      <button class="avatar hidden" id="userMenuButton" aria-label="Tài khoản"></button>
+      <button class="menu-button" id="menuButton" aria-label="Mở menu">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="view active" id="homeView" data-view="home">
+      <div class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">Khám phá Việt Nam bằng đường sắt</span>
+          <h1>Đi xa hơn.<br><em>Chạm gần hơn.</em></h1>
+          <p>Đặt vé trong vài phút, chọn đúng chỗ bạn thích và tận hưởng hành trình xuyên Việt thật nhẹ nhàng.</p>
+          <div class="trust-row">
+            <div><strong>30+</strong><span>Ga kết nối</span></div>
+            <div><strong>24/7</strong><span>Hỗ trợ</span></div>
+            <div><strong>4.9/5</strong><span>Khách hài lòng</span></div>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="sun"></div>
+          <div class="cloud cloud-one"></div><div class="cloud cloud-two"></div>
+          <div class="mountain mountain-back"></div><div class="mountain mountain-front"></div>
+          <div class="train"><span class="engine-window"></span><span></span><span></span><b></b><b></b></div>
+          <div class="rail rail-one"></div><div class="rail rail-two"></div>
+          <div class="hero-ticket"><small>Chuyến tiếp theo</small><strong>Hà Nội → Đà Nẵng</strong><span>19:30 · SE1</span></div>
+        </div>
+      </div>
+
+      <form class="search-card floating" id="heroSearchForm">
+        <div class="field route-field"><label for="heroFrom">Ga đi</label><select id="heroFrom" name="from" required></select></div>
+        <button type="button" class="swap-button" data-swap aria-label="Đổi ga đi và ga đến">⇄</button>
+        <div class="field route-field"><label for="heroTo">Ga đến</label><select id="heroTo" name="to" required></select></div>
+        <div class="field"><label for="heroDate">Ngày đi</label><input id="heroDate" name="date" type="date" required></div>
+        <div class="field"><label for="heroPassengers">Hành khách</label><select id="heroPassengers" name="passengers"><option value="1">1 người</option><option value="2">2 người</option><option value="3">3 người</option><option value="4">4 người</option><option value="5">5 người</option><option value="6">6 người</option></select></div>
+        <button class="btn btn-primary search-submit" type="submit"><span>⌕</span> Tìm chuyến</button>
+      </form>
+
+      <section class="content-section">
+        <div class="section-heading"><div><span class="eyebrow">Tuyến đường được yêu thích</span><h2>Đi đâu vào cuối tuần này?</h2></div><a href="#search">Xem mọi hành trình →</a></div>
+        <div class="destination-grid">
+          <article class="destination destination-hanoi"><span class="tag">Phổ biến</span><div><small>Từ 415.000 ₫</small><h3>Hà Nội → Vinh</h3><p>8 giờ 25 phút · Tàu NA1</p></div></article>
+          <article class="destination destination-danang"><div><small>Từ 695.000 ₫</small><h3>Hà Nội → Đà Nẵng</h3><p>15 giờ 45 phút · Tàu SE1</p></div></article>
+          <article class="destination destination-saigon"><div><small>Từ 1.380.000 ₫</small><h3>Sài Gòn → Hà Nội</h3><p>33 giờ 30 phút · Tàu SE3</p></div></article>
+        </div>
+      </section>
+
+      <section class="why-section">
+        <div class="section-heading centered"><div><span class="eyebrow">Vì sao chọn RailGo?</span><h2>Mọi điều bạn cần cho chuyến đi</h2></div></div>
+        <div class="feature-grid">
+          <article><span class="feature-icon">⌁</span><h3>Đặt vé nhanh</h3><p>Tìm, chọn chỗ và hoàn tất đặt vé trong một quy trình rõ ràng.</p></article>
+          <article><span class="feature-icon">▣</span><h3>Giá minh bạch</h3><p>Giá hiển thị đầy đủ, không thêm chi phí bất ngờ ở bước cuối.</p></article>
+          <article><span class="feature-icon">♢</span><h3>Hỗ trợ tận tâm</h3><p>Đội ngũ sẵn sàng đồng hành trước, trong và sau chuyến đi.</p></article>
+          <article><span class="feature-icon">✓</span><h3>Thanh toán an toàn</h3><p>Dữ liệu được bảo vệ, xác nhận vé được gửi ngay sau thanh toán.</p></article>
+        </div>
+      </section>
+    </section>
+
+    <section class="view page-view" id="searchView" data-view="search">
+      <div class="page-heading"><span class="eyebrow">Lịch trình</span><h1>Tìm chuyến tàu phù hợp</h1><p>So sánh giờ chạy, giá vé và số chỗ còn lại.</p></div>
+      <form class="search-card" id="searchForm">
+        <div class="field"><label for="searchFrom">Ga đi</label><select id="searchFrom" name="from" required></select></div>
+        <button type="button" class="swap-button" data-swap aria-label="Đổi ga">⇄</button>
+        <div class="field"><label for="searchTo">Ga đến</label><select id="searchTo" name="to" required></select></div>
+        <div class="field"><label for="searchDate">Ngày đi</label><input id="searchDate" name="date" type="date" required></div>
+        <div class="field"><label for="searchPassengers">Hành khách</label><select id="searchPassengers" name="passengers"><option value="1">1 người</option><option value="2">2 người</option><option value="3">3 người</option><option value="4">4 người</option><option value="5">5 người</option><option value="6">6 người</option></select></div>
+        <button class="btn btn-primary search-submit">Tìm chuyến</button>
+      </form>
+      <div class="results-header"><div><h2 id="resultsTitle">Chuyến tàu dành cho bạn</h2><p id="resultsMeta">Nhập hành trình để bắt đầu tìm kiếm.</p></div><select id="sortTrips" aria-label="Sắp xếp"><option value="time">Giờ đi sớm nhất</option><option value="price">Giá thấp nhất</option><option value="seats">Nhiều chỗ nhất</option></select></div>
+      <div id="tripResults" class="trip-list empty-state"><span>🚆</span><h3>Hành trình đang chờ bạn</h3><p>Chọn ga đi, ga đến và ngày khởi hành ở phía trên.</p></div>
+    </section>
+
+    <section class="view page-view" id="lookupView" data-view="lookup">
+      <div class="split-panel">
+        <div class="lookup-copy"><span class="eyebrow">Không cần đăng nhập</span><h1>Tra cứu vé của bạn</h1><p>Nhập mã vé có dạng <strong>RG-YYYYMMDD-XXXX</strong> để xem thông tin hành trình và trạng thái thanh toán.</p><div class="mini-note">Mã vé được cấp ngay sau khi hoàn tất bước đặt chỗ.</div></div>
+        <div class="panel-card"><form id="lookupForm"><div class="field"><label for="bookingCode">Mã vé</label><input id="bookingCode" name="code" placeholder="Ví dụ: RG-20261021-0001" required></div><button class="btn btn-primary btn-block">Tra cứu ngay</button></form><div id="lookupResult"></div></div>
+      </div>
+    </section>
+
+    <section class="view page-view" id="accountView" data-view="account">
+      <div class="page-heading inline"><div><span class="eyebrow">Tài khoản</span><h1>Vé của tôi</h1><p>Theo dõi và quản lý những hành trình đã đặt.</p></div><button class="btn btn-secondary" id="logoutButton">Đăng xuất</button></div>
+      <div id="accountGate" class="gate-card"><span>♙</span><h2>Đăng nhập để xem vé</h2><p>Mọi hành trình của bạn sẽ được lưu và hiển thị tại đây.</p><button class="btn btn-primary" data-open-auth>Đăng nhập</button></div>
+      <div id="bookingList" class="booking-list hidden"></div>
+    </section>
+
+    <section class="view page-view" id="adminView" data-view="admin">
+      <div class="page-heading inline"><div><span class="eyebrow">Trung tâm điều hành</span><h1>Tổng quan RailGo</h1><p>Theo dõi hoạt động bán vé và lịch chạy.</p></div><button class="btn btn-primary" id="refreshDashboard">Làm mới dữ liệu</button></div>
+      <div class="stats-grid" id="statsGrid"></div>
+      <div class="admin-grid"><div class="panel-card"><div class="card-title"><h2>Chuyến tàu</h2><span>Quản lý lịch chạy</span></div><div id="adminTrips" class="table-wrap"></div></div><div class="panel-card"><div class="card-title"><h2>Đơn gần đây</h2><span>Cập nhật theo thời gian thực</span></div><div id="recentBookings"></div></div></div>
+    </section>
+  </main>
+
+  <footer><a href="#home" class="brand light"><span class="brand-mark"><i></i><i></i><i></i></span><span>Rail<span>Go</span></span></a><p>Đặt vé tàu trực tuyến – an tâm trên mọi hành trình.</p><small>© 2026 RailGo. Đồ án học phần Đánh giá hiệu năng hệ thống.</small></footer>
+
+  <div class="modal-backdrop hidden" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <div class="modal"><button class="modal-close" data-close-modal aria-label="Đóng">×</button><div class="auth-tabs"><button class="active" data-auth-tab="login">Đăng nhập</button><button data-auth-tab="register">Tạo tài khoản</button></div>
+      <form id="loginForm" class="auth-form"><h2 id="authTitle">Chào mừng trở lại</h2><p>Đăng nhập để tiếp tục hành trình cùng RailGo.</p><div class="field"><label for="loginEmail">Email</label><input id="loginEmail" name="email" type="email" value="customer@railgo.vn" required></div><div class="field"><label for="loginPassword">Mật khẩu</label><input id="loginPassword" name="password" type="password" value="Customer@123" required></div><button class="btn btn-primary btn-block">Đăng nhập</button><small class="form-hint">Tài khoản mẫu đã được điền sẵn.</small></form>
+      <form id="registerForm" class="auth-form hidden"><h2>Tạo tài khoản mới</h2><p>Thông tin của bạn được dùng để xuất vé điện tử.</p><div class="field"><label>Họ và tên</label><input name="fullName" required minlength="2" maxlength="60"></div><div class="field"><label>Email</label><input name="email" type="email" required></div><div class="field"><label>Số điện thoại</label><input name="phone" inputmode="numeric" required></div><div class="field"><label>Mật khẩu</label><input name="password" type="password" required></div><button class="btn btn-primary btn-block">Đăng ký</button></form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="bookingModal" role="dialog" aria-modal="true"><div class="modal modal-wide"><button class="modal-close" data-close-booking aria-label="Đóng">×</button><div id="bookingContent"></div></div></div>
+  <div class="toast-stack" id="toastStack" aria-live="polite"></div>
+  <script src="/assets/app.js" defer></script>
+</body>
+</html>

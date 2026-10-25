@@ -1,0 +1,28 @@
+{
+  "users": [],
+  "stations": [
+    {"id":"ST-HN","code":"HNO","name":"Hà Nội","city":"Hà Nội"},
+    {"id":"ST-ND","code":"NDI","name":"Nam Định","city":"Nam Định"},
+    {"id":"ST-VINH","code":"VII","name":"Vinh","city":"Nghệ An"},
+    {"id":"ST-HUE","code":"HUI","name":"Huế","city":"Thừa Thiên Huế"},
+    {"id":"ST-DN","code":"DNG","name":"Đà Nẵng","city":"Đà Nẵng"},
+    {"id":"ST-NT","code":"NTR","name":"Nha Trang","city":"Khánh Hòa"},
+    {"id":"ST-SG","code":"SGO","name":"Sài Gòn","city":"TP. Hồ Chí Minh"}
+  ],
+  "trains": [
+    {"id":"TR-SE1","code":"SE1","name":"Thống Nhất SE1","carriages":8,"active":true},
+    {"id":"TR-SE3","code":"SE3","name":"Thống Nhất SE3","carriages":7,"active":true},
+    {"id":"TR-SE5","code":"SE5","name":"Thống Nhất SE5","carriages":6,"active":true},
+    {"id":"TR-NA1","code":"NA1","name":"Sông Lam NA1","carriages":5,"active":true}
+  ],
+  "trips": [
+    {"id":"TP-001","trainId":"TR-SE1","from":"ST-HN","to":"ST-DN","departure":"2026-10-24T19:30:00+07:00","arrival":"2026-10-25T11:15:00+07:00","basePrice":785000,"seats":64,"availableSeats":31,"status":"OPEN"},
+    {"id":"TP-002","trainId":"TR-SE3","from":"ST-HN","to":"ST-DN","departure":"2026-10-24T22:00:00+07:00","arrival":"2026-10-25T14:35:00+07:00","basePrice":695000,"seats":56,"availableSeats":18,"status":"OPEN"},
+    {"id":"TP-003","trainId":"TR-SE5","from":"ST-DN","to":"ST-SG","departure":"2026-10-25T08:40:00+07:00","arrival":"2026-10-25T23:10:00+07:00","basePrice":820000,"seats":48,"availableSeats":22,"status":"OPEN"},
+    {"id":"TP-004","trainId":"TR-NA1","from":"ST-HN","to":"ST-VINH","departure":"2026-10-25T21:20:00+07:00","arrival":"2026-10-26T05:45:00+07:00","basePrice":415000,"seats":40,"availableSeats":29,"status":"OPEN"},
+    {"id":"TP-005","trainId":"TR-SE1","from":"ST-HN","to":"ST-SG","departure":"2026-10-26T19:30:00+07:00","arrival":"2026-10-28T05:20:00+07:00","basePrice":1450000,"seats":64,"availableSeats":12,"status":"OPEN"},
+    {"id":"TP-006","trainId":"TR-SE3","from":"ST-SG","to":"ST-HN","departure":"2026-10-27T19:00:00+07:00","arrival":"2026-10-29T04:30:00+07:00","basePrice":1380000,"seats":56,"availableSeats":37,"status":"OPEN"}
+  ],
+  "bookings": [],
+  "auditLogs": []
+}

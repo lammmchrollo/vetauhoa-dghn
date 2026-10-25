@@ -1,0 +1,15 @@
+node_modules/
+.env
+data/runtime.json
+tests/jmeter/results/
+npm-debug.log*
+
+# Hồ sơ bí mật chỉ gửi giảng viên, không công khai trên GitHub
+docs/04_Bug_Manifest_RailGo_BI_MAT.xlsx
+docs/README_TONG_HOP_LOI_GUI_GIANG_VIEN.md
+docs/TONG_HOP_LOI_GUI_GIANG_VIEN.docx
+docs/assets/
+evidence/
+tools/
+tests/puppeteer/capture-evidence.js
+DANH_MUC_HO_SO.md

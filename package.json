@@ -1,0 +1,26 @@
+{
+  "name": "railway-ticket-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Hệ thống đặt vé tàu hỏa RailGo phục vụ đồ án Đánh giá hiệu năng hệ thống",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test:api": "newman run tests/postman/RailGo.postman_collection.json -e tests/postman/RailGo.local.postman_environment.json -r cli,htmlextra --reporter-htmlextra-export tests/postman/newman-report.html",
+    "test:e2e": "node tests/puppeteer/run.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "newman": "^6.2.1",
+    "newman-reporter-htmlextra": "^1.23.1",
+    "puppeteer": "^24.25.0"
+  }
+}
