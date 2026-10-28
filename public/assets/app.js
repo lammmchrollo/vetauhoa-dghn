@@ -27,7 +27,7 @@ function money(value) {
 }
 
 function dateTime(value) {
-  return new Intl.DateTimeFormat('en-US', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(value));
+  return new Intl.DateTimeFormat('vi-VN', { dateStyle: 'short', timeStyle: 'short' }).format(new Date(value));
 }
 
 function time(value) {
@@ -97,7 +97,9 @@ async function loadStations() {
   ['heroFrom', 'heroTo', 'searchFrom', 'searchTo'].forEach((id) => { $(`#${id}`).innerHTML = stationOptions(); });
   $('#heroFrom').value = 'ST-HN'; $('#heroTo').value = 'ST-DN';
   $('#searchFrom').value = 'ST-HN'; $('#searchTo').value = 'ST-DN';
-  const defaultDate = '2026-10-24';
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const defaultDate = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`;
   $('#heroDate').value = defaultDate; $('#searchDate').value = defaultDate;
 }
 
@@ -121,7 +123,7 @@ async function performSearch(values) {
 
 function renderTrips() {
   const sort = $('#sortTrips').value;
-  const trips = [...appState.trips].sort((a, b) => sort === 'price' ? a.basePrice - b.basePrice : sort === 'seats' ? b.availableSeats - a.availableSeats : new Date(a.departure) - new Date(b.departure));
+  const trips = [...appState.trips].sort((a, b) => sort === 'price' ? b.basePrice - a.basePrice : sort === 'seats' ? b.availableSeats - a.availableSeats : new Date(a.departure) - new Date(b.departure));
   const from = appState.stations.find((s) => s.id === appState.currentSearch?.from)?.name || '';
   const to = appState.stations.find((s) => s.id === appState.currentSearch?.to)?.name || '';
   $('#resultsTitle').textContent = `${from} → ${to}`;
@@ -163,7 +165,7 @@ async function openBooking(tripId) {
       <form id="bookingForm"><h3>Thông tin hành khách</h3>${Array.from({ length: passengerCount }, (_, i) => `<div class="passenger-form"><div class="field"><label>Họ tên hành khách ${i + 1}</label><input name="name${i}" required minlength="2"></div><div class="field"><label>CCCD/Hộ chiếu</label><input name="identity${i}" required pattern="\\d{12}" maxlength="12"></div><div class="field"><label>Tuổi</label><input name="age${i}" type="number" min="1" max="120" value="25" required></div></div>`).join('')}
       <div class="field"><label>Mã ưu đãi (không bắt buộc)</label><input name="promoCode" maxlength="12" placeholder="RAILGO10"></div>
       <div class="booking-summary"><span>Tạm tính</span><strong>${money(trip.basePrice * passengerCount)}</strong></div>
-      <button class="btn btn-primary btn-block">Xác nhận đặt vé</button><p class="form-hint">Vé được phép hủy trước giờ tàu chạy ít nhất 2 giờ.</p></form></div>`;
+      <button class="btn btn-primary btn-block">Xác nhận đặt vé</button><p class="form-hint">Vé được phép hủy trước giờ tàu chạy ít nhất 4 giờ.</p></form></div>`;
     $$('.seat', $('#bookingContent')).forEach((button) => button.addEventListener('click', () => toggleSeat(button, passengerCount)));
     $('#bookingForm').addEventListener('submit', submitBooking);
   } catch (error) { $('#bookingContent').innerHTML = `<p>${error.message}</p>`; }

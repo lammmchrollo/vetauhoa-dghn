@@ -4,9 +4,37 @@ const bcrypt = require('bcryptjs');
 
 const dataDir = path.join(__dirname, '..', 'data');
 const seedPath = path.join(dataDir, 'seed.json');
-const runtimePath = path.join(dataDir, 'runtime.json');
+const runtimePath = process.env.RUNTIME_DATA_PATH
+  ? path.resolve(process.env.RUNTIME_DATA_PATH)
+  : path.join(dataDir, 'runtime.json');
 
 let state;
+
+function vietnamDate(offsetDays = 0) {
+  const target = new Date(Date.now() + offsetDays * 86400000);
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Ho_Chi_Minh', year: 'numeric', month: '2-digit', day: '2-digit'
+  }).formatToParts(target);
+  const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${value.year}-${value.month}-${value.day}`;
+}
+
+function applyDemoDates() {
+  const schedules = {
+    'TP-001': [1, '19:30', 2, '11:15'],
+    'TP-002': [1, '22:00', 2, '14:35'],
+    'TP-003': [2, '08:40', 2, '23:10'],
+    'TP-004': [2, '21:20', 3, '05:45'],
+    'TP-005': [3, '19:30', 5, '05:20'],
+    'TP-006': [4, '19:00', 6, '04:30']
+  };
+  state.trips.forEach((trip) => {
+    const schedule = schedules[trip.id];
+    if (!schedule) return;
+    trip.departure = `${vietnamDate(schedule[0])}T${schedule[1]}:00+07:00`;
+    trip.arrival = `${vietnamDate(schedule[2])}T${schedule[3]}:00+07:00`;
+  });
+}
 
 function save() {
   fs.writeFileSync(runtimePath, JSON.stringify(state, null, 2), 'utf8');
@@ -50,6 +78,7 @@ async function init() {
       passwordHash: await bcrypt.hash('Admin@123', 10)
     }
   ];
+  applyDemoDates();
   save();
   return state;
 }

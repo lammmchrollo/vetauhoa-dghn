@@ -34,7 +34,8 @@ function validateEmail(email) {
 }
 
 app.get('/api/health', (req, res) => {
-  res.json({ data: { status: 'UP', version: '1.0.0', bugMode, timestamp: new Date().toISOString() } });
+  const demoDate = store.state.trips.find((trip) => trip.id === 'TP-001')?.departure.slice(0, 10);
+  res.json({ data: { status: 'UP', version: '1.0.0', bugMode, demoDate, timestamp: new Date().toISOString() } });
 });
 
 app.post('/api/auth/register', asyncRoute(async (req, res) => {
@@ -43,7 +44,7 @@ app.post('/api/auth/register', asyncRoute(async (req, res) => {
   if (!fullName || fullName.trim().length < 2 || fullName.trim().length > 60) errors.fullName = 'Họ tên phải từ 2 đến 60 ký tự.';
   if (!validateEmail(email)) errors.email = 'Email không đúng định dạng.';
   if (!/^0\d{9}$/.test(String(phone || ''))) errors.phone = 'Số điện thoại phải gồm 10 chữ số và bắt đầu bằng 0.';
-  if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,32}$/.test(String(password || ''))) {
+  if (!bugMode && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,32}$/.test(String(password || ''))) {
     errors.password = 'Mật khẩu dài 8–32 ký tự, có chữ hoa, chữ thường và chữ số.';
   }
   if (store.state.users.some((item) => item.email.toLowerCase() === String(email).toLowerCase())) errors.email = 'Email đã được sử dụng.';
@@ -88,6 +89,7 @@ app.get('/api/trips/search', asyncRoute(async (req, res) => {
   if (!Number.isInteger(count) || count < 1 || count > 6) {
     return res.status(400).json({ error: 'INVALID_PASSENGERS', message: 'Số hành khách phải từ 1 đến 6.' });
   }
+  if (bugMode && count === 6) throw new Error('Search service failed while allocating a large group');
   if (bugMode) await wait(2300);
   const result = store.state.trips
     .filter((trip) => trip.status === 'OPEN')
@@ -118,20 +120,19 @@ app.get('/api/trips/:id/seats', (req, res) => {
 
 app.post('/api/bookings', authenticate, allow('CUSTOMER'), (req, res, next) => {
   const { tripId, passengers, seats, promoCode } = req.body;
-  if (bugMode && promoCode === 'CRASH500') return next(new Error('Promo service is unavailable'));
   const trip = store.state.trips.find((item) => item.id === tripId && item.status === 'OPEN');
   if (!trip) return res.status(404).json({ error: 'TRIP_NOT_FOUND', message: 'Chuyến tàu không tồn tại hoặc đã đóng.' });
   if (!Array.isArray(passengers) || passengers.length < 1 || passengers.length > 6) {
     return res.status(400).json({ error: 'INVALID_PASSENGERS', message: 'Mỗi đơn có từ 1 đến 6 hành khách.' });
   }
-  if (!Array.isArray(seats) || (!bugMode && seats.length !== passengers.length)) {
+  if (!Array.isArray(seats) || seats.length !== passengers.length) {
     return res.status(400).json({ error: 'INVALID_SEATS', message: 'Mỗi hành khách phải chọn đúng một ghế.' });
   }
   const invalidPassenger = passengers.find((p) => !p.fullName || !/^\d{12}$/.test(String(p.identity || '')) || Number(p.age) < 1 || Number(p.age) > 120);
   if (invalidPassenger) return res.status(400).json({ error: 'INVALID_PASSENGER', message: 'Thông tin hành khách không hợp lệ.' });
 
   const occupied = new Set(store.state.bookings.filter((b) => b.tripId === trip.id && b.status !== 'CANCELLED').flatMap((b) => b.seats));
-  const seatsToCheck = bugMode ? seats.slice(0, 1) : seats;
+  const seatsToCheck = seats;
   if (seatsToCheck.some((seatCode) => occupied.has(seatCode))) {
     return res.status(409).json({ error: 'SEAT_UNAVAILABLE', message: 'Một hoặc nhiều ghế vừa được người khác đặt.' });
   }
@@ -170,7 +171,7 @@ app.get('/api/bookings/me', authenticate, allow('CUSTOMER'), (req, res) => {
 });
 
 app.get('/api/bookings/lookup/:code', (req, res, next) => {
-  if (bugMode && req.params.code === 'RG-ERROR') return next(new TypeError('Cannot read properties of undefined'));
+  if (bugMode && !/^RG-\d{8}-\d{4}$/i.test(req.params.code)) return next(new TypeError('Invalid booking code cannot be processed'));
   const booking = store.state.bookings.find((item) => item.code.toLowerCase() === req.params.code.toLowerCase());
   if (!booking) return res.status(404).json({ error: 'NOT_FOUND', message: 'Không tìm thấy vé với mã đã nhập.' });
   const { userId, ...safeBooking } = booking;
@@ -183,7 +184,7 @@ app.patch('/api/bookings/:id/cancel', authenticate, allow('CUSTOMER', 'STAFF', '
   if (req.user.role === 'CUSTOMER' && booking.userId !== req.user.id) return res.status(403).json({ error: 'FORBIDDEN' });
   const trip = store.state.trips.find((item) => item.id === booking.tripId);
   const hours = (new Date(trip.departure) - Date.now()) / 3600000;
-  if (!bugMode && hours < 4) return res.status(409).json({ error: 'CANCELLATION_CLOSED', message: 'Chỉ được hủy vé trước giờ tàu chạy ít nhất 4 giờ.' });
+  if (hours < 4) return res.status(409).json({ error: 'CANCELLATION_CLOSED', message: 'Chỉ được hủy vé trước giờ tàu chạy ít nhất 4 giờ.' });
   if (booking.status === 'CANCELLED') return res.status(409).json({ error: 'INVALID_STATE', message: 'Vé đã được hủy trước đó.' });
   booking.status = 'CANCELLED';
   booking.refundAmount = booking.paymentStatus === 'PAID' ? Math.round(booking.totalPrice * 0.8) : 0;
