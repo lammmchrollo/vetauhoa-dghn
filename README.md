@@ -19,6 +19,8 @@ Mở `http://localhost:3000`.
 | Nhân viên | `staff@railgo.vn` | `Staff@123` |
 | Quản trị viên | `admin@railgo.vn` | `Admin@123` |
 
+Vé mẫu của tài khoản khách hàng: `RG-20261028-0001`.
+
 ## Cấu trúc
 
 - `src/`: backend và REST API.

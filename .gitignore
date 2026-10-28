@@ -7,8 +7,7 @@ npm-debug.log*
 docs/~$*
 
 # Hồ sơ bí mật chỉ gửi giảng viên, không công khai trên GitHub
-docs/04_Bug_Manifest_RailGo_BI_MAT.xlsx
-docs/04_Bug_Manifest_RailGo_v2_BI_MAT.xlsx
+docs/04_Bug_Manifest_RailGo*_BI_MAT.xlsx
 docs/README_TONG_HOP_LOI_GUI_GIANG_VIEN.md
 docs/TONG_HOP_LOI_GUI_GIANG_VIEN.docx
 docs/assets/

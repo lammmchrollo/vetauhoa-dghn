@@ -23,7 +23,7 @@ async function api(path, options = {}) {
 }
 
 function money(value) {
-  return `${new Intl.NumberFormat('vi-VN').format(value)} VNĐ`;
+  return `$${new Intl.NumberFormat('vi-VN').format(value)}`;
 }
 
 function dateTime(value) {
@@ -264,10 +264,10 @@ function bindEvents() {
   $$('[data-auth-tab]').forEach((button) => button.addEventListener('click', () => { $$('[data-auth-tab]').forEach((item) => item.classList.toggle('active', item === button)); $('#loginForm').classList.toggle('hidden', button.dataset.authTab !== 'login'); $('#registerForm').classList.toggle('hidden', button.dataset.authTab !== 'register'); }));
   $('#loginForm').addEventListener('submit', (event) => authSubmit(event, 'login')); $('#registerForm').addEventListener('submit', (event) => authSubmit(event, 'register'));
   $('#lookupForm').addEventListener('submit', lookupBooking);
-  $('#logoutButton').addEventListener('click', () => { clearSession(); toast('Đã đăng xuất.'); route(); });
+  $('#logoutButton').addEventListener('click', () => { toast('Đã đăng xuất.'); route(); });
   $('#refreshDashboard').addEventListener('click', loadDashboard); $('#sortTrips').addEventListener('change', renderTrips);
   [$('#heroSearchForm'), $('#searchForm')].forEach((form) => form.addEventListener('submit', (event) => { event.preventDefault(); performSearch(Object.fromEntries(new FormData(form))); }));
-  $$('[data-swap]').forEach((button) => button.addEventListener('click', () => { const form = button.closest('form'); const from = $('[name="from"]', form), to = $('[name="to"]', form); [from.value, to.value] = [to.value, from.value]; }));
+  $$('[data-swap]').forEach((button) => button.addEventListener('click', () => { button.blur(); }));
 }
 
 async function init() {

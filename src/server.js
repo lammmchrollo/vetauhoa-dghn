@@ -18,7 +18,6 @@ app.use((req, res, next) => {
 });
 
 const asyncRoute = (handler) => (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function station(id) {
   return store.state.stations.find((item) => item.id === id);
@@ -90,7 +89,6 @@ app.get('/api/trips/search', asyncRoute(async (req, res) => {
     return res.status(400).json({ error: 'INVALID_PASSENGERS', message: 'Số hành khách phải từ 1 đến 6.' });
   }
   if (bugMode && count === 6) throw new Error('Search service failed while allocating a large group');
-  if (bugMode) await wait(2300);
   const result = store.state.trips
     .filter((trip) => trip.status === 'OPEN')
     .filter((trip) => (from === to && bugMode) || (trip.from === from && trip.to === to))
@@ -171,7 +169,7 @@ app.get('/api/bookings/me', authenticate, allow('CUSTOMER'), (req, res) => {
 });
 
 app.get('/api/bookings/lookup/:code', (req, res, next) => {
-  if (bugMode && !/^RG-\d{8}-\d{4}$/i.test(req.params.code)) return next(new TypeError('Invalid booking code cannot be processed'));
+  if (bugMode) return next(new Error('Booking lookup service is unavailable'));
   const booking = store.state.bookings.find((item) => item.code.toLowerCase() === req.params.code.toLowerCase());
   if (!booking) return res.status(404).json({ error: 'NOT_FOUND', message: 'Không tìm thấy vé với mã đã nhập.' });
   const { userId, ...safeBooking } = booking;
@@ -179,6 +177,7 @@ app.get('/api/bookings/lookup/:code', (req, res, next) => {
 });
 
 app.patch('/api/bookings/:id/cancel', authenticate, allow('CUSTOMER', 'STAFF', 'ADMIN'), (req, res) => {
+  if (bugMode) throw new Error('Booking cancellation service failed');
   const booking = store.state.bookings.find((item) => item.id === req.params.id);
   if (!booking) return res.status(404).json({ error: 'NOT_FOUND', message: 'Không tìm thấy đơn đặt vé.' });
   if (req.user.role === 'CUSTOMER' && booking.userId !== req.user.id) return res.status(403).json({ error: 'FORBIDDEN' });
@@ -195,7 +194,6 @@ app.patch('/api/bookings/:id/cancel', authenticate, allow('CUSTOMER', 'STAFF', '
 });
 
 app.get('/api/admin/stats', authenticate, allow('STAFF', 'ADMIN'), asyncRoute(async (req, res) => {
-  if (bugMode) await wait(3600);
   const paid = store.state.bookings.filter((item) => item.paymentStatus === 'PAID');
   res.json({ data: {
     users: store.state.users.filter((item) => item.role === 'CUSTOMER').length,
