@@ -11,6 +11,17 @@ npm start
 
 Mở `http://localhost:3000`.
 
+## Deploy nhanh lên Render
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/lammmchrollo/vetauhoa-dghn)
+
+1. Bấm nút **Deploy to Render** phía trên và đăng nhập bằng GitHub.
+2. Chọn repository `vetauhoa-dghn`, giữ nguyên cấu hình trong `render.yaml`.
+3. Bấm **Apply/Deploy Blueprint** và chờ trạng thái chuyển sang `Live`.
+4. Mở đường dẫn dạng `https://railgo-vetauhoa.onrender.com` do Render cung cấp.
+
+Bản Free có thể mất khoảng một phút để khởi động lại sau 15 phút không có truy cập. Dữ liệu phát sinh được lưu tạm và sẽ trở về dữ liệu mẫu sau khi dịch vụ khởi động lại hoặc được triển khai lại; điều này phù hợp cho bản demo học phần.
+
 ## Tài khoản mẫu
 
 | Vai trò | Email | Mật khẩu |

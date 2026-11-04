@@ -6,6 +6,7 @@ const { issueToken, authenticate, allow } = require('./auth');
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
+const host = process.env.HOST || '0.0.0.0';
 const bugMode = String(process.env.BUG_MODE ?? 'true').toLowerCase() !== 'false';
 
 app.use(express.json({ limit: '1mb' }));
@@ -252,7 +253,7 @@ app.use((error, req, res, next) => {
 });
 
 store.init().then(() => {
-  app.listen(port, () => console.log(`RailGo đang chạy tại http://localhost:${port} (BUG_MODE=${bugMode})`));
+  app.listen(port, host, () => console.log(`RailGo đang chạy tại http://${host}:${port} (BUG_MODE=${bugMode})`));
 }).catch((error) => {
   console.error('Không thể khởi tạo dữ liệu:', error);
   process.exit(1);

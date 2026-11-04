@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: railgo-vetauhoa
+    runtime: node
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: BUG_MODE
+        value: "true"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: RUNTIME_DATA_PATH
+        value: /tmp/railgo-runtime.json
