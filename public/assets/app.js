@@ -163,7 +163,7 @@ async function openBooking(tripId) {
       <div class="booking-step"><span class="eyebrow">${trip.train.code} · ${trip.fromStation.name} → ${trip.toStation.name}</span><h2>Chọn ${passengerCount} ghế</h2><p>Ghế màu xám đã có người đặt. Mỗi hành khách chọn một ghế.</p>
       <div class="seat-grid">${seats.map((seat) => `<button class="seat" data-seat="${seat.code}" ${seat.available ? '' : 'disabled'}>${seat.code}</button>`).join('')}</div>
       <form id="bookingForm"><h3>Thông tin hành khách</h3>${Array.from({ length: passengerCount }, (_, i) => `<div class="passenger-form"><div class="field"><label>Họ tên hành khách ${i + 1}</label><input name="name${i}" required minlength="2"></div><div class="field"><label>CCCD/Hộ chiếu</label><input name="identity${i}" required pattern="\\d{12}" maxlength="12"></div><div class="field"><label>Tuổi</label><input name="age${i}" type="number" min="1" max="120" value="25" required></div></div>`).join('')}
-      <div class="field"><label>Mã ưu đãi (không bắt buộc)</label><input name="promoCode" maxlength="12" placeholder="RAILGO10"></div>
+      <div class="field"><label>Mã ưu đãi RAILGO10 – giảm 10% (không bắt buộc)</label><input name="promoCode" maxlength="12" placeholder="RAILGO10"></div>
       <div class="booking-summary"><span>Tạm tính</span><strong>${money(trip.basePrice * passengerCount)}</strong></div>
       <button class="btn btn-primary btn-block">Xác nhận đặt vé</button><p class="form-hint">Vé được phép hủy trước giờ tàu chạy ít nhất 4 giờ.</p></form></div>`;
     $$('.seat', $('#bookingContent')).forEach((button) => button.addEventListener('click', () => toggleSeat(button, passengerCount)));

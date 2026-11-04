@@ -170,10 +170,10 @@ app.get('/api/bookings/me', authenticate, allow('CUSTOMER'), (req, res) => {
 });
 
 app.get('/api/bookings/lookup/:code', (req, res, next) => {
-  if (bugMode) return next(new Error('Booking lookup service is unavailable'));
   const booking = store.state.bookings.find((item) => item.code.toLowerCase() === req.params.code.toLowerCase());
   if (!booking) return res.status(404).json({ error: 'NOT_FOUND', message: 'Không tìm thấy vé với mã đã nhập.' });
   const { userId, ...safeBooking } = booking;
+  safeBooking.passengers = booking.passengers.map(({ identity, ...passenger }) => passenger);
   res.json({ data: { ...safeBooking, trip: decorateTrip(store.state.trips.find((trip) => trip.id === booking.tripId)) } });
 });
 
