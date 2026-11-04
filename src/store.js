@@ -23,10 +23,16 @@ function applyDemoDates() {
   const schedules = {
     'TP-001': [1, '19:30', 2, '11:15'],
     'TP-002': [1, '22:00', 2, '14:35'],
-    'TP-003': [2, '08:40', 2, '23:10'],
-    'TP-004': [2, '21:20', 3, '05:45'],
-    'TP-005': [3, '19:30', 5, '05:20'],
-    'TP-006': [4, '19:00', 6, '04:30']
+    'TP-003': [1, '08:40', 1, '23:10'],
+    'TP-004': [1, '06:00', 1, '14:25'],
+    'TP-005': [1, '19:30', 3, '05:20'],
+    'TP-006': [1, '19:00', 3, '04:30'],
+    'TP-007': [1, '07:30', 1, '20:10'],
+    'TP-008': [1, '18:10', 2, '10:30'],
+    'TP-009': [1, '07:00', 1, '15:00'],
+    'TP-010': [1, '09:00', 1, '11:30'],
+    'TP-011': [1, '13:20', 1, '22:30'],
+    'TP-012': [1, '15:30', 1, '23:55']
   };
   state.trips.forEach((trip) => {
     const schedule = schedules[trip.id];
@@ -57,6 +63,13 @@ function bookingCode() {
 async function init() {
   if (fs.existsSync(runtimePath)) {
     state = JSON.parse(fs.readFileSync(runtimePath, 'utf8'));
+    const seed = JSON.parse(fs.readFileSync(seedPath, 'utf8'));
+    for (const collection of ['stations', 'trains', 'trips']) {
+      const existingIds = new Set(state[collection].map((item) => item.id));
+      state[collection].push(...seed[collection].filter((item) => !existingIds.has(item.id)));
+    }
+    applyDemoDates();
+    save();
     return state;
   }
 
