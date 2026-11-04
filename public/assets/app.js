@@ -144,6 +144,15 @@ function renderTrips() {
   $$('[data-book-trip]').forEach((button) => button.addEventListener('click', () => openBooking(button.dataset.bookTrip)));
 }
 
+function openAllTrips() {
+  appState.trips = [];
+  appState.currentSearch = null;
+  $('#resultsTitle').textContent = 'Chuyến tàu dành cho bạn';
+  $('#resultsMeta').textContent = 'Nhập hành trình để bắt đầu tìm kiếm.';
+  $('#tripResults').className = 'trip-list empty-state';
+  $('#tripResults').innerHTML = '<span>🚆</span><h3>Hành trình đang chờ bạn</h3><p>Chọn ga đi, ga đến và ngày khởi hành ở phía trên.</p>';
+}
+
 async function openBooking(tripId) {
   if (!appState.user) {
     openAuth();
@@ -266,6 +275,7 @@ function bindEvents() {
   $('#lookupForm').addEventListener('submit', lookupBooking);
   $('#logoutButton').addEventListener('click', () => { toast('Đã đăng xuất.'); route(); });
   $('#refreshDashboard').addEventListener('click', loadDashboard); $('#sortTrips').addEventListener('change', renderTrips);
+  $('#viewAllTrips').addEventListener('click', openAllTrips);
   [$('#heroSearchForm'), $('#searchForm')].forEach((form) => form.addEventListener('submit', (event) => { event.preventDefault(); performSearch(Object.fromEntries(new FormData(form))); }));
   $$('[data-swap]').forEach((button) => button.addEventListener('click', () => { button.blur(); }));
 }
